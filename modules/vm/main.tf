@@ -32,9 +32,9 @@ resource "azurerm_linux_virtual_machine" "vm" {
   network_interface_ids           = [azurerm_network_interface.nic.id]
   admin_ssh_key {
     username  = "azureuser"
-    public_key = file("${path.module}/ssh-keys/terraform-azure.pub")
+    public_key = file("~/.ssh/id_rsa.pub")
+    
   }
-
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -52,9 +52,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     name  = "resource-owner"
     owner = "roshni-einfochips.com"
   }  
-#custom_data = filebase64("${path.module}/azure_cli_login.sh")
- custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
-/*
+custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
  provisioner "local-exec" {
   command = <<-EOT
     az storage blob upload --account-name ${var.storage_account_name} \
@@ -64,5 +62,5 @@ resource "azurerm_linux_virtual_machine" "vm" {
                             --content-type "text/plain" \
                             --file ./file1.txt
   EOT
-}*/
+}
 }

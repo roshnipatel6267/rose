@@ -50,7 +50,3 @@ variable "container_name" {
   type        = string
 }
 
-variable "sas_token_expiry" {
-  description = "Expiry date for the SAS token"
-  type        = string
-}
