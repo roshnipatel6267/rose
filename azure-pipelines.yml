@@ -1,0 +1,82 @@
+trigger:
+- dev
+
+pr:
+- dev
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: terraform_approval
+    displayName: "Terraform Approval"
+    steps:
+      - script: 
+          echo "Terraform Approval Job"
+        displayName: 'Terraform Approval'
+        condition: succeededOrFailed()
+
+  - job: manual_approval
+    displayName: "Manual Approval"
+    dependsOn: terraform_approval
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: 
+          echo "Manual Approval Job"
+        displayName: 'Manual Approval'
+        condition: succeededOrFailed()
+
+      - script: |
+          ls -la
+          pwd
+          cd $(Build.SourcesDirectory)/rose
+          pwd
+          terraform init
+        displayName: 'Terraform Init'
+
+      - script: |
+          cd $(Build.SourcesDirectory)/rose
+          terraform validate
+        displayName: 'Terraform Validate'
+
+      - script: |
+          az login 
+        displayName: 'Azure Login'
+
+      - script: |
+          cd $(Build.SourcesDirectory)/rose
+          terraform plan -var "vnet_name"=$"my-vnet" -var "vnet_address_space"=$["10.0.0.0/16"] -var "subnet_name"=$"subnet" -var "subnet_address_prefix"=$["10.0.2.0/24"] -var "vm_name"=$"ubuntu-server" -var "vm_size"=$"Standard_B1s"  -var "vm_username"=$"azureuser" -var "location_name"=$"southeast Asia" -var "storage_account_name"=$"roshnitest11" -var "container_name"=$"roshni-container" -var "nsg_name"=$"nsg" -var "location"=$"southeast Asia" -var "resource_group_name"=$"sa1_test_eic_TejalDave"   -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]"
+           if [ $? -ne 0 ]; then
+            echo "Error: Terraform plan failed. Please check the plan output for details."
+            exit 1
+          fi
+        displayName: 'Terraform Plan'
+
+  - job: manual_intervention
+    displayName: 'Manual Approval Intervention'
+    dependsOn: manual_approval
+    pool: server
+    steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 5
+        inputs:
+          instructions: 'Please review and manually approve the Terraform changes.'
+
+  - job: apply_changes
+    displayName: 'Apply Terraform Changes'
+    dependsOn: manual_intervention
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: |
+          cd $(Build.SourcesDirectory)/rose
+          terraform init
+          az login 
+          terraform apply -auto-approve -var "vnet_name"=$"my-vnet" -var "vnet_address_space"=$["10.0.0.0/16"] -var "subnet_name"=$"subnet" -var "subnet_address_prefix"=$["10.0.2.0/24"] -var "vm_name"=$"ubuntu-server" -var "vm_size"=$"Standard_B1s"  -var "vm_username"=$"azureuser" -var "location_name"=$"southeast Asia" -var "storage_account_name"=$"roshnitest11" -var "container_name"=$"roshni-container" -var "nsg_name"=$"nsg" -var "location"=$"southeast Asia" -var "resource_group_name"=$"sa1_test_eic_TejalDave"   -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]"
+
+          if [ $? -ne 0 ]; then
+            echo "Error: Terraform apply failed. Please check the apply output for details."
+            exit 1
+          fi
+        displayName: 'Apply Terraform Changes'
