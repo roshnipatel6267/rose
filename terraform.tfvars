@@ -31,10 +31,9 @@ vnet_address_space          = ["10.0.0.0/16"]
 subnet_name                 = "subnet"
 subnet_address_prefix       = ["10.0.2.0/24"]
 # Virtual Machine (VM) variables
-vm_name                     = "ubuntu-server"
+vm_name                     = "azureuser"
 vm_size                     = "Standard_B1s"
 vm_username                 = "azureuser"
-vm_password                 = "Complex@password"
 location_name               = "southeast Asia"
 # Blob Storage variables
 storage_account_name        = "roshnitest11"

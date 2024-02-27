@@ -29,11 +29,6 @@ variable "vm_username" {
   description = "Username for the Virtual Machine"
 }
 
-variable "vm_password" {
-  type        = string
-  description = "Password for the Virtual Machine"
-}
-
 variable "subnet_id" {
   type        = string
   description = "ID of the subnet to attach the VM to"
