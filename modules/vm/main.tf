@@ -30,11 +30,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   #admin_password                  = var.vm_password
   #disable_password_authentication = false
   network_interface_ids           = [azurerm_network_interface.nic.id]
-  admin_ssh_key {
+ /* admin_ssh_key {
     username  = "azureuser"
     public_key = file("~/.ssh/id_rsa.pub")
     
-  }
+  }*/
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
