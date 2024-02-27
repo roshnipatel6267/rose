@@ -46,20 +46,21 @@ jobs:
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          terraform plan -var "vnet_name=$(vnet_name)" \
-                    -var "subnet_name=subnet" \
-                    -var "vnet_address_space=10.0.0.0/16" \
-                    -var "subnet_address_prefix=10.0.0.0/24" \
-                    -var "vm_name=ubuntu-server" \
-                    -var "vm_size=Standard_B1s" \
-                    -var "vm_username=azureuser" \
-                    -var "location_name=southeast Asia" \
-                    -var "storage_account_name=roshnitest11" \
-                    -var "container_name=roshni-container" \
-                    -var "nsg_name=nsg" \
-                    -var "location=southeast Asia" \
-                    -var "resource_group_name=sa1_test_eic_TejalDave" \
-                    -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]"
+          terraform plan \
+          -var "nsg_name=$(nsg_name)" \
+          -var "location=$(location)" \
+          -var "resource_group_name=$(resource_group_name)" \
+          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
+          -var "vnet_name=$(vnet_name)" \
+          -var "vnet_address_space=[\"10.0.0.0/16\"]" \
+          -var "subnet_name=$(subnet_name)" \
+          -var "subnet_address_prefix=[\"10.0.0.0/24\"]" \
+          -var "vm_name=$(vm_name)" \
+          -var "vm_size=$(vm_size)" \
+          -var "vm_username=$(vm_username)" \
+          -var "storage_account_name=$(storage_account_name)" \
+          -var "container_name=$(container_name)" \
+          -var "location_name=$(location_name)"
         displayName: 'Terraform Plan'
 
   - job: manual_intervention
