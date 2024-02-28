@@ -29,11 +29,15 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username                  = var.vm_username
   disable_password_authentication = true
   network_interface_ids           = [azurerm_network_interface.nic.id]
-  admin_ssh_key {
+  /*admin_ssh_key {
     username  = "azureuser"
     public_key = file("~/.ssh/id_rsa.pub")
     #public_key = var.ssh_public_key_path != "" ? file(var.ssh_public_key_path) : null
     
+  }*/
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file(var.ssh_public_key_path)
   }
   /*
   admin_ssh_key {
