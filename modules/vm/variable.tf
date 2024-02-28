@@ -47,4 +47,5 @@ variable "container_name" {
 
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
+  type        = string
 }
