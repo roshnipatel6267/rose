@@ -30,9 +30,6 @@ jobs:
         condition: succeededOrFailed()
 
       - script: |
-          ls -la
-          pwd
-          echo "Checking SSH_PUBLIC_KEY_PATH: $(SSH_PUBLIC_KEY_PATH)"
           ls -la $(SSH_PUBLIC_KEY_PATH)
         displayName: 'Check SSH Public Key File'
 
@@ -57,7 +54,7 @@ jobs:
           -var "nsg_name=$(nsg_name)" \
           -var "location=$(location)" \
           -var "resource_group_name=$(resource_group_name)" \
-          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
+          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
           -var "vnet_name=$(vnet_name)" \
           -var "vnet_address_space=[\"10.0.0.0/16\"]" \
           -var "subnet_name=$(subnet_name)" \
@@ -89,15 +86,13 @@ jobs:
     steps:
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          pwd
-          echo "Checking SSH_PUBLIC_KEY_PATH: $(SSH_PUBLIC_KEY_PATH)"
-          ls -la $(SSH_PUBLIC_KEY_PATH)
+          terraform init
           az login 
           terraform apply -auto-approve \
           -var "nsg_name=$(nsg_name)" \
           -var "location=$(location)" \
           -var "resource_group_name=$(resource_group_name)" \
-          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
+          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
           -var "vnet_name=$(vnet_name)" \
           -var "vnet_address_space=[\"10.0.0.0/16\"]" \
           -var "subnet_name=$(subnet_name)" \
