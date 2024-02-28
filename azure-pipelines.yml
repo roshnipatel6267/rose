@@ -1,3 +1,4 @@
+
 trigger:
 - dev
 
@@ -22,21 +23,25 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      ssh_public_key_path: '/home/roshnipatel/.ssh/id_rsa.pub'
+      ssh_key_secure_file: 'your-secure-file-name'  # Replace with the actual secure file name
     steps:
       - script: 
           echo "Manual Approval Job"
         displayName: 'Manual Approval'
         condition: succeededOrFailed()
 
-      - script: |
-          ls -la $(ssh_public_key_path)
-        displayName: 'Check SSH Public Key File'
+      - task: DownloadSecureFile@1
+        name: downloadSSHKey
+        displayName: 'Download SSH Key'
+        inputs:
+          secureFile: $(ssh_key_secure_file)
+          retryCount: 3
 
       - script: |
-          chmod 700 /home/roshnipatel/.ssh
-          chmod 600 $(ssh_public_key_path)
-        displayName: 'Set SSH Key Permissions'
+          ls -la $(Agent.TempDirectory)/$(ssh_key_secure_file)
+          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
+          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
+        displayName: 'Configure SSH Key'
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
