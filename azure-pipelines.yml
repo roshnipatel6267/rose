@@ -22,7 +22,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      ssh_public_key_path: '$(Build.SourcesDirectory)/home/roshnipatel/.ssh/id_rsa.pub'
+      ssh_public_key_path: '$(Agent.BuildDirectory)/home/vsts/.ssh/id_rsa.pub'
     steps:
       - script: 
           echo "Manual Approval Job"
