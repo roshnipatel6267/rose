@@ -22,7 +22,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      ssh_public_key_path: '/home/roshnipatel/.ssh/id_rsa.pub'
+      SSH_PUBLIC_KEY_PATH: '$(Agent.BuildDirectory)/home/roshnipatel/.ssh/id_rsa.pub'
     steps:
       - script: 
           echo "Manual Approval Job"
@@ -30,7 +30,10 @@ jobs:
         condition: succeededOrFailed()
 
       - script: |
-          ls -la $(ssh_public_key_path)
+          ls -la
+          pwd
+          echo "Checking SSH_PUBLIC_KEY_PATH: $(SSH_PUBLIC_KEY_PATH)"
+          ls -la $(SSH_PUBLIC_KEY_PATH)
         displayName: 'Check SSH Public Key File'
 
       - script: |
@@ -54,7 +57,7 @@ jobs:
           -var "nsg_name=$(nsg_name)" \
           -var "location=$(location)" \
           -var "resource_group_name=$(resource_group_name)" \
-          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
+          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
           -var "vnet_name=$(vnet_name)" \
           -var "vnet_address_space=[\"10.0.0.0/16\"]" \
           -var "subnet_name=$(subnet_name)" \
@@ -86,13 +89,15 @@ jobs:
     steps:
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          terraform init
+          pwd
+          echo "Checking SSH_PUBLIC_KEY_PATH: $(SSH_PUBLIC_KEY_PATH)"
+          ls -la $(SSH_PUBLIC_KEY_PATH)
           az login 
           terraform apply -auto-approve \
           -var "nsg_name=$(nsg_name)" \
           -var "location=$(location)" \
           -var "resource_group_name=$(resource_group_name)" \
-          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
+          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
           -var "vnet_name=$(vnet_name)" \
           -var "vnet_address_space=[\"10.0.0.0/16\"]" \
           -var "subnet_name=$(subnet_name)" \
