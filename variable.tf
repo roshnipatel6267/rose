@@ -76,7 +76,7 @@ variable "location_name" {
   description = "Location for resources in the root module"
 }
 
-
+/*
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
-}
+}*/
