@@ -30,7 +30,7 @@ jobs:
         condition: succeededOrFailed()
 
       - script: |
-          ls -la /home/vsts/work/1/home/roshnipatel/.ssh/
+          ls -la /home/roshnipatel/.ssh/
           ls -la $(SSH_PUBLIC_KEY_PATH)
         displayName: 'Debug Output'
 
