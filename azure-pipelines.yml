@@ -22,7 +22,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      SSH_PUBLIC_KEY_PATH: '$(Agent.BuildDirectory)/home/roshnipatel/.ssh/id_rsa.pub'
+      SSH_PUBLIC_KEY_PATH: '/home/roshnipatel/.ssh/id_rsa.pub'
     steps:
       - script: 
           echo "Manual Approval Job"
@@ -30,8 +30,9 @@ jobs:
         condition: succeededOrFailed()
 
       - script: |
+          ls -la /home/vsts/work/1/home/roshnipatel/.ssh/
           ls -la $(SSH_PUBLIC_KEY_PATH)
-        displayName: 'Check SSH Public Key File'
+        displayName: 'Debug Output'
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
@@ -65,7 +66,7 @@ jobs:
           -var "storage_account_name=$(storage_account_name)" \
           -var "container_name=$(container_name)" \
           -var "location_name=$(location_name)" \
-          -var "ssh_public_key_path=/home/roshnipatel/.ssh/id_rsa.pub"
+          -var "ssh_public_key_path=$(SSH_PUBLIC_KEY_PATH)"
         displayName: 'Terraform Plan'
 
   - job: manual_intervention
@@ -103,7 +104,7 @@ jobs:
           -var "storage_account_name=$(storage_account_name)" \
           -var "container_name=$(container_name)" \
           -var "location_name=$(location_name)" \
-          -var "ssh_public_key_path=/home/roshnipatel/.ssh/id_rsa.pub"
+          -var "ssh_public_key_path=$(SSH_PUBLIC_KEY_PATH)"
           if [ $? -ne 0 ]; then
             echo "Error: Terraform apply failed. Please check the apply output for details."
             exit 1
