@@ -23,7 +23,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      ssh_key_secure_file: 'your-secure-file-name'  # Replace with the actual secure file name
+      ssh_key_secure_file: '$(ssh_key_secure_file)' 
     steps:
       - script: 
           echo "Manual Approval Job"
