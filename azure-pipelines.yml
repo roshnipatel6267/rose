@@ -22,7 +22,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      ssh_public_key_path: '$(Agent.BuildDirectory)/home/vsts/.ssh/id_rsa.pub'
+      ssh_public_key_path: '/home/vsts/.ssh/id_rsa.pub'
     steps:
       - script: 
           echo "Manual Approval Job"
@@ -30,7 +30,7 @@ jobs:
         condition: succeededOrFailed()
 
       - script: |
-          ls -la $(ssh_public_key_path)
+          ls -la /home/vsts/.ssh/
         displayName: 'Check SSH Public Key File'
 
       - script: |
