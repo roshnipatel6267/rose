@@ -38,10 +38,12 @@ jobs:
           retryCount: 3
 
       - script: |
+          mkdir -p $(Agent.HomeDirectory)/.ssh
           ls -la $(Agent.TempDirectory)/$(ssh_key_secure_file)
           cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
         displayName: 'Configure SSH Key'
+
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
