@@ -30,7 +30,7 @@ jobs:
         condition: succeededOrFailed()
 
       - script: |
-          ls -la $(ssh_public_key_path)
+          ls -la /home/roshnipatel/.ssh/id_rsa.pub
         displayName: 'Check SSH Public Key File'
 
       - script: |
