@@ -44,8 +44,8 @@ variable "container_name" {
   description = "Name of the storage container"
   type        = string
 }
-/*
+
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
   type        = string
-}*/
+}
