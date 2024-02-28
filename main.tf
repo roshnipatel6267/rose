@@ -30,7 +30,7 @@ module "vm" {
   resource_group_name  = var.resource_group_name
   vm_size                 = var.vm_size
   vm_username             = var.vm_username
-  ssh_public_key_path = var.ssh_public_key_path
+  #ssh_public_key_path = var.ssh_public_key_path
 
   subnet_id               = module.vnet.subnet_id
   location_name           = var.location   
