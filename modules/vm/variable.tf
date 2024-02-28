@@ -47,6 +47,4 @@ variable "container_name" {
 
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
-  type        = string
-  default     = "~/.ssh/id_rsa.pub"  # Set the default value for local development
 }
