@@ -42,6 +42,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
     #public_key = file("${var.ssh_public_key_path}/file")
     #public_key = file("~/.ssh/id_rsa.pub")
   }
+   ssh_keys {
+    key_data = file(var.ssh_public_key)
+    path     = "/home/azureuser/.ssh/authorized_keys"
+  }
 
   os_disk {
     caching              = "ReadWrite"
