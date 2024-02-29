@@ -45,8 +45,7 @@ jobs:
         ls -l $(Agent.HomeDirectory)/.ssh
         ssh-keygen -t rsa -b 2048 -f $(Agent.HomeDirectory)/.ssh/id_rsa -N ""
         echo "Creating SSH key file"
-        cat $(Agent.HomeDirectory)/.ssh/id_rsa
-        cp $(Agent.HomeDirectory)/.ssh/id_rsa.pub $(ssh_key_path)
+        cat $(Agent.HomeDirectory)/.ssh/id_rsa.pub > $(ssh_key_path)
       displayName: 'Configure SSH Key'
 
     - script: |
