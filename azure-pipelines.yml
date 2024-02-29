@@ -78,8 +78,9 @@ jobs:
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          terraform plan -out=tfplan \
-          -var "ssh_public_key=$(ssh_public_key)"
+          terraform plan -var="ssh_public_key=$(cat ~/.ssh/id_rsa.pub)"
+          #terraform plan -out=tfplan \
+          #-var "ssh_public_key=$(ssh_public_key)"
         displayName: 'Terraform Plan'
 
   - job: manual_intervention
@@ -101,7 +102,8 @@ jobs:
       - script: |
           cd $(Build.SourcesDirectory)/rose
           terraform init
-          az login 
-          terraform apply -auto-approve \
-          -var "ssh_public_key=$(ssh_public_key)" \
+          az login
+          terraform apply -var="ssh_public_key=$(cat ~/.ssh/id_rsa.pub)" 
+          #terraform apply -auto-approve \
+          #-var "ssh_public_key=$(ssh_public_key)" \
         displayName: 'Apply Terraform Changes'
