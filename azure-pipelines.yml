@@ -44,6 +44,12 @@ jobs:
           mkdir -p $(Agent.HomeDirectory)/.ssh
           cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
+          if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa.pub" ]; then
+          echo "Public key file exists."
+            else
+              echo "Public key file does not exist."
+              exit 1
+            fi
         displayName: 'Configure SSH Key'
 
       - script: |
