@@ -40,11 +40,13 @@ jobs:
 
     - script: |
         echo "Agent.HomeDirectory: $(Agent.HomeDirectory)"
-        echo "Creating .ssh directory"
         mkdir -p $(Agent.HomeDirectory)/.ssh
+        echo "Creating .ssh directory"
         ls -l $(Agent.HomeDirectory)/.ssh
+        ssh-keygen -t rsa -b 2048 -f $(Agent.HomeDirectory)/.ssh/id_rsa -N ""
         echo "Creating SSH key file"
-        ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(ssh_key_path)
+        cat $(Agent.HomeDirectory)/.ssh/id_rsa
+        cp $(Agent.HomeDirectory)/.ssh/id_rsa $(ssh_key_path)
       displayName: 'Configure SSH Key'
 
     - script: |
