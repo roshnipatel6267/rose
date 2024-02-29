@@ -21,7 +21,6 @@ resource "azurerm_public_ip" "public_ip" {
   allocation_method   = "Dynamic"
 }
 
-# Create a virtual machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                            = var.vm_name
   location                        = var.location_name
@@ -48,17 +47,21 @@ resource "azurerm_linux_virtual_machine" "vm" {
     owner = "roshni-einfochips.com"
   }
 
-  admin_ssh_key {
-    username   = var.vm_username
-    public_key = file(var.ssh_public_key)
-  }
+  os_profile {
+    computer_name  = var.vm_name
+    admin_username = var.vm_username
 
-  ssh_keys {
-    key_data = file(var.ssh_public_key)
-    path     = "/home/${var.vm_username}/.ssh/id_rsa.pub"
-  }
+    custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
 
-  custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
+    linux_configuration {
+      disable_password_authentication = true
+
+      ssh_keys {
+        key_data = file(var.ssh_public_key)
+        path     = "/home/${var.vm_username}/.ssh/authorized_keys"
+      }
+    }
+  }
 
   provisioner "local-exec" {
     command = <<-EOT

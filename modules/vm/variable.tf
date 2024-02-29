@@ -70,3 +70,8 @@ variable "ssh_keys" {
   type        = string
   default     = "~/.ssh/id_rsa.pub"
 }
+variable "os_profile" {
+  type        = string
+  description = "Username for the Virtual Machine OS profile"
+
+}
