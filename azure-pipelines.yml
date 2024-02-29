@@ -44,8 +44,7 @@ jobs:
         ls -l $(Agent.HomeDirectory)/.ssh
         cat $(Agent.HomeDirectory)/.ssh/id_rsa
         ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(ssh_key_path)
-     displayName: 'Configure SSH Key'
-
+      displayName: 'Configure SSH Key'
 
     - script: |
         cd $(Build.SourcesDirectory)/rose
