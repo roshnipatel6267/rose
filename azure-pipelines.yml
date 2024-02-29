@@ -6,9 +6,11 @@ pr:
 
 variables:
 - name: ssh_key_secure_file
-  value: 'file'  # Replace with the actual name of your Secure File
+  value: 'file'
 - name: ssh_key_path
-  value: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'  # Adjust the path accordingly
+  value: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'
+- name: private_key_path
+  value: '$(Agent.HomeDirectory)/.ssh/id_rsa'
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -42,22 +44,7 @@ jobs:
           mkdir -p $(Agent.HomeDirectory)/.ssh
           cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
-          ls -l $(Agent.HomeDirectory)/.ssh
-          if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa" ]; then
-            echo "Private key file exists."
-          else
-            echo "Private key file does not exist."
-            exit 1
-          fi
-
-          ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(Agent.HomeDirectory)/.ssh/id_rsa.pub
-          ls -l $(Agent.HomeDirectory)/.ssh
-          if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa.pub" ]; then
-            echo "Public key file exists."
-          else
-            echo "Public key file does not exist."
-            exit 1
-          fi
+          ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(ssh_key_path)
         displayName: 'Configure SSH Key'
 
       - script: |

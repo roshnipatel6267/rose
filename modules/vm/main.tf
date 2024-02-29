@@ -43,6 +43,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     #public_key = file("~/.ssh/id_rsa.pub")
   }
   
+  
 
   os_disk {
     caching              = "ReadWrite"
