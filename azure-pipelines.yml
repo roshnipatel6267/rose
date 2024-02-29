@@ -75,6 +75,7 @@ jobs:
         displayName: 'Azure Login'  
 
       - script: |
+          echo "SSH Key Path: $(ssh_key_path)"
           cd $(Build.SourcesDirectory)/rose
           terraform plan -var="ssh_public_key=$(cat $(ssh_key_path))"
         displayName: 'Terraform Plan'
