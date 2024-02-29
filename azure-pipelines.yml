@@ -1,8 +1,8 @@
 trigger:
-- dev
+- test
 
 pr:
-- dev
+- test
 
 variables:
 - name: ssh_key_secure_file
