@@ -12,7 +12,7 @@ variables:
   value: "$(Agent.HomeDirectory)/.ssh/id_rsa.pub"
 
 pool:
-  vmImage: 'roshni-test'
+  vmImage: 'ubuntu-latest'
 
 jobs:
   - job: terraform_approval
@@ -27,7 +27,7 @@ jobs:
     displayName: "Manual Approval"
     dependsOn: terraform_approval
     pool:
-      vmImage: 'roshni-test'
+      vmImage: 'ubuntu-latest'
     variables:
       ssh_key_secure_file: 'file'
     steps:
@@ -82,7 +82,7 @@ jobs:
     displayName: 'Apply Terraform Changes'
     dependsOn: manual_intervention
     pool:
-      vmImage: 'roshni-test'
+      vmImage: 'ubuntu-latest'
     steps:
       - script: |
           cd $(Build.SourcesDirectory)/rose
