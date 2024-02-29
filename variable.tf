@@ -120,3 +120,8 @@ variable "ssh_public_key" {
   description = "Path to the SSH public key file"
   default     = "~/.ssh/id_rsa.pub" 
 }
+variable "os_profile" {
+  type        = string
+  description = "Username for the Virtual Machine OS profile"
+
+}

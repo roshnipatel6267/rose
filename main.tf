@@ -36,6 +36,7 @@ module "vm" {
   storage_account_name    = module.blob.storage_account_name
   container_name          = module.blob.container_name
   ssh_public_key = var.ssh_public_key
+  os_profile              = var.os_profile
 
 }
 module "blob" {
