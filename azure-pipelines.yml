@@ -7,6 +7,8 @@ pr:
 variables:
 - name: ssh_key_secure_file
   value: 'file'  # Replace with the actual name of your Secure File
+- name: ssh_key_path
+  value: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'  # Adjust the path accordingly
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -27,12 +29,8 @@ jobs:
       vmImage: 'ubuntu-latest'
     variables:
       ssh_key_secure_file: 'file'
+      ssh_key_path: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'
     steps:
-      - script: 
-          echo "Manual Approval Job"
-        displayName: 'Manual Approval'
-        condition: succeededOrFailed()
-
       - task: DownloadSecureFile@1
         name: downloadSSHKey
         displayName: 'Download SSH Key'
@@ -44,7 +42,7 @@ jobs:
           mkdir -p $(Agent.HomeDirectory)/.ssh
           cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
-          ls -l $(Agent.HomeDirectory)/.ssh  # Add this line to list files in the .ssh directory
+          ls -l $(Agent.HomeDirectory)/.ssh
           if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa" ]; then
             echo "Private key file exists."
           else
@@ -53,7 +51,7 @@ jobs:
           fi
 
           ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(Agent.HomeDirectory)/.ssh/id_rsa.pub
-          ls -l $(Agent.HomeDirectory)/.ssh  # Add this line to list files in the .ssh directory
+          ls -l $(Agent.HomeDirectory)/.ssh
           if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa.pub" ]; then
             echo "Public key file exists."
           else
@@ -78,9 +76,7 @@ jobs:
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          terraform plan -var="ssh_public_key=$(cat ~/.ssh/id_rsa.pub)"
-          #terraform plan -out=tfplan \
-          #-var "ssh_public_key=$(ssh_public_key)"
+          terraform plan -var="ssh_public_key=$(cat $(ssh_key_path))"
         displayName: 'Terraform Plan'
 
   - job: manual_intervention
@@ -103,7 +99,5 @@ jobs:
           cd $(Build.SourcesDirectory)/rose
           terraform init
           az login
-          terraform apply -var="ssh_public_key=$(cat ~/.ssh/id_rsa.pub)" 
-          #terraform apply -auto-approve \
-          #-var "ssh_public_key=$(ssh_public_key)" \
+          terraform apply -var="ssh_public_key=$(cat $(ssh_key_path))"
         displayName: 'Apply Terraform Changes'

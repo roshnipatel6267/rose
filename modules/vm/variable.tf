@@ -62,35 +62,6 @@ variable "vm_password" {
 
 variable "ssh_public_key" {
   description = "ssh_public _key value"
-  default     = "~/.ssh/id_rsa.pub"
+  default = ".ssh/id_rsa.pub"
   
-}
-variable "ssh_keys" {
-  description = "SSH public key for the virtual machine"
-  type        = string
-  default     = "~/.ssh/id_rsa.pub"
-}
-
-variable "os_profile" {
-  description = "OS profile configuration for the virtual machine"
-  type = object({
-    linux_configuration = object({
-      disable_password_authentication = bool
-      ssh_keys = list(object({
-        key_data = string
-        path     = string
-      }))
-    })
-  })
-  default = {
-    linux_configuration = {
-      disable_password_authentication = true
-      ssh_keys = [
-        {
-          key_data = null
-          path     = null
-        }
-      ]
-    }
-  }
 }
