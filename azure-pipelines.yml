@@ -95,7 +95,7 @@ jobs:
       - task: CopyFilesOverSSH@0
         displayName: 'Copy files to the remote machine'
         inputs:
-            sshEndpoint: 'your-ssh-service-connection'  # Specify the SSH service connection endpoint
+            sshEndpoint: 'ssh-login'  # Specify the SSH service connection endpoint
             sourceFolder: '$(Build.SourcesDirectory)/files'  # Update the source folder path as per your needs
             targetFolder: '/home/azureuser/rose'  # Update the target folder path on the remote machine
             cleanTargetFolder: true
