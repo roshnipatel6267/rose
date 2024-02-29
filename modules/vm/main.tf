@@ -43,7 +43,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
     #public_key = file("~/.ssh/id_rsa.pub")
   }
   
-  
+    custom_data = <<-EOF
+                #!/bin/bash
+                echo '${var.ssh_public_key}' > /home/${var.vm_username}/.ssh/id_rsa.pub
+                EOF
 
   os_disk {
     caching              = "ReadWrite"
@@ -62,7 +65,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     name  = "resource-owner"
     owner = "roshni-einfochips.com"
   }  
-custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
+#custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
  provisioner "local-exec" {
   command = <<-EOT
     az storage blob upload --account-name ${var.storage_account_name} \
