@@ -1,9 +1,15 @@
-
 trigger:
 - dev
 
 pr:
 - dev
+
+variables:
+- name: ssh_key_secure_file
+  value: 'id_rsa'  # Replace with the actual name of your Secure File
+
+- name: ssh_public_key_path
+  value: '/home/vsts/work/1/s/path/to/your/id_rsa.pub'  # Replace with the actual path to your SSH public key
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -22,8 +28,6 @@ jobs:
     dependsOn: terraform_approval
     pool:
       vmImage: 'ubuntu-latest'
-    variables:
-      ssh_key_secure_file: 'file' 
     steps:
       - script: 
           echo "Manual Approval Job"
@@ -43,7 +47,6 @@ jobs:
           cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
         displayName: 'Configure SSH Key'
-
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
