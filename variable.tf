@@ -118,5 +118,5 @@ variable "vm_password" {
 
 variable "ssh_public_key_path" {
   description = "Path to the SSH public key file"
-  default = "$(Agent.HomeDirectory)/.ssh/id_rsa.pub"
+  default = ".ssh/id_rsa.pub"
 }
