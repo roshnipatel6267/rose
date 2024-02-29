@@ -82,16 +82,6 @@ variable "os_profile" {
       }))
     })
   })
-  default = {
-    linux_configuration = {
-      disable_password_authentication = true
-      ssh_keys = [
-        {
-          key_data = file("/home/roshnipatel/.ssh/id_rsa.pub")
-          path     = "/home/roshnipatel/.ssh/id_rsa.pub"
-        }
-      ]
-    }
-  }
+  default = null
 }
 
