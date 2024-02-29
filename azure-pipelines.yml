@@ -8,9 +8,6 @@ variables:
 - name: ssh_key_secure_file
   value: 'file'  # Replace with the actual name of your Secure File
 
-- name: ssh_public_key_path
-  value: "$(Agent.TempDirectory)/$(ssh_key_secure_file)"
-
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -90,12 +87,3 @@ jobs:
           az login 
           terraform apply -auto-approve 
         displayName: 'Apply Terraform Changes'
-
-      - task: CopyFilesOverSSH@0
-        displayName: 'Copy files to the remote machine'
-        inputs:
-            sshEndpoint: 'ssh-login'  # Specify the SSH service connection endpoint
-            sourceFolder: '$(Build.SourcesDirectory)/files'  # Update the source folder path as per your needs
-            targetFolder: '/home/azureuser/rose'  # Update the target folder path on the remote machine
-            cleanTargetFolder: true
-            failOnEmptySource: true
