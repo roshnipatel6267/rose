@@ -65,7 +65,7 @@ variable "ssh_public_key" {
   default     = "~/.ssh/id_rsa.pub"
   
 }
-variable "ssh_keys" {
+variable "admin_ssh_key" {
   description = "SSH public key for the virtual machine"
   type        = string
   default     = "~/.ssh/id_rsa.pub"
