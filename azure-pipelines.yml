@@ -6,86 +6,84 @@ pr:
 
 variables:
 - name: ssh_key_secure_file
-  value: 'file'
+  value: 'file'  # Replace with the actual name of your Secure File
 - name: ssh_key_path
-  value: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'
-- name: private_key_path
-  value: '$(Agent.HomeDirectory)/.ssh/id_rsa'
+  value: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'  # Adjust the path accordingly
 
 pool:
   vmImage: 'ubuntu-latest'
 
 jobs:
-  - job: terraform_approval
-    displayName: "Terraform Approval"
-    steps:
-      - script: 
-          echo "Terraform Approval Job"
-        displayName: 'Terraform Approval'
-        condition: succeededOrFailed()
+- job: terraform_approval
+  displayName: "Terraform Approval"
+  steps:
+    - script: 
+        echo "Terraform Approval Job"
+      displayName: 'Terraform Approval'
+      condition: succeededOrFailed()
 
-  - job: manual_approval
-    displayName: "Manual Approval"
-    dependsOn: terraform_approval
-    pool:
-      vmImage: 'ubuntu-latest'
-    variables:
-      ssh_key_secure_file: 'file'
-      ssh_key_path: '$(Build.SourcesDirectory)/.ssh/id_rsa.pub'
-    steps:
-      - task: DownloadSecureFile@1
-        name: downloadSSHKey
-        displayName: 'Download SSH Key'
-        inputs:
-          secureFile: $(ssh_key_secure_file)
-          retryCount: 3
+- job: manual_approval
+  displayName: "Manual Approval"
+  dependsOn: terraform_approval
+  pool:
+    vmImage: 'ubuntu-latest'
+  variables:
+    ssh_key_secure_file: 'file'
+    ssh_key_path: '$(Agent.TempDirectory)/$(ssh_key_secure_file)'
+  steps:
+    - task: DownloadSecureFile@1
+      name: downloadSSHKey
+      displayName: 'Download SSH Key'
+      inputs:
+        secureFile: $(ssh_key_secure_file)
+        retryCount: 3
 
-      - script: |
-          mkdir -p $(Agent.HomeDirectory)/.ssh
-          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
-          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
-          ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(ssh_key_path)
-        displayName: 'Configure SSH Key'
+    - script: |
+        mkdir -p $(Agent.HomeDirectory)/.ssh
+        cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
+        chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
+        ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(ssh_key_path)
+      displayName: 'Configure SSH Key'
 
-      - script: |
-          cd $(Build.SourcesDirectory)/rose
-          terraform init
-        displayName: 'Terraform Init'
+    - script: |
+        cd $(Build.SourcesDirectory)/rose
+        terraform init
+      displayName: 'Terraform Init'
 
-      - script: |
-          cd $(Build.SourcesDirectory)/rose
-          terraform validate
-        displayName: 'Terraform Validate'
+    - script: |
+        cd $(Build.SourcesDirectory)/rose
+        terraform validate
+      displayName: 'Terraform Validate'
 
-      - script: |
-          az login 
-        displayName: 'Azure Login'  
+    - script: |
+        az login 
+      displayName: 'Azure Login'  
 
-      - script: |
-          echo "SSH Key Path: $(ssh_key_path)"
-          cd $(Build.SourcesDirectory)/rose
-          terraform plan -var="ssh_public_key=$(cat $(ssh_key_path))"
-        displayName: 'Terraform Plan'
+    - script: |
+        echo "SSH Key Path: $(ssh_key_path)"
+        cd $(Build.SourcesDirectory)/rose
+        terraform plan -var="ssh_public_key=$(cat $(ssh_key_path))"
+      displayName: 'Terraform Plan'
 
-  - job: manual_intervention
-    displayName: 'Manual Approval Intervention'
-    dependsOn: manual_approval
-    pool: server
-    steps:
-      - task: ManualValidation@0
-        timeoutInMinutes: 5
-        inputs:
-          instructions: 'Please review and manually approve the Terraform changes.'
+- job: manual_intervention
+  displayName: 'Manual Approval Intervention'
+  dependsOn: manual_approval
+  pool: server
+  steps:
+    - task: ManualValidation@0
+      timeoutInMinutes: 5
+      inputs:
+        instructions: 'Please review and manually approve the Terraform changes.'
 
-  - job: apply_changes
-    displayName: 'Apply Terraform Changes'
-    dependsOn: manual_intervention
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-      - script: |
-          cd $(Build.SourcesDirectory)/rose
-          terraform init
-          az login
-          terraform apply -var="ssh_public_key=$(cat $(ssh_key_path))"
-        displayName: 'Apply Terraform Changes'
+- job: apply_changes
+  displayName: 'Apply Terraform Changes'
+  dependsOn: manual_intervention
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+    - script: |
+        cd $(Build.SourcesDirectory)/rose
+        terraform init
+        az login
+        terraform apply -var="ssh_public_key=$(cat $(ssh_key_path))"
+      displayName: 'Apply Terraform Changes'
