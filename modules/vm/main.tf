@@ -1,25 +1,3 @@
-# Define the network interface
-resource "azurerm_network_interface" "nic" {
-  name                = "${var.vm_name}-nic"
-  location            = var.location_name
-  resource_group_name = var.resource_group_name
-
-  ip_configuration {
-    name                          = "ipconfig"
-    subnet_id                     = var.subnet_id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.public_ip.id
-  }
-}
-
-# Define the public IP address
-resource "azurerm_public_ip" "public_ip" {
-  name                = "${var.vm_name}-ip"
-  location            = var.location_name
-  resource_group_name = var.resource_group_name
-  allocation_method   = "Dynamic"
-}
-
 # Create a virtual machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                            = var.vm_name
@@ -48,13 +26,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   admin_ssh_key {
-    username  = var.vm_username
-    key_data  = file(var.ssh_public_key)
+    username   = var.vm_username
+    public_key = file(var.ssh_public_key)
   }
 
   ssh_keys {
     key_data = file(var.ssh_public_key)
-    path     = "/home/${var.vm_username}/.ssh/authorized_keys"
+    path     = "/home/${var.vm_username}/.ssh/id_rsa.pub"
   }
 
   custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
