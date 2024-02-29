@@ -45,6 +45,8 @@ jobs:
           cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
           ls -l $(Agent.HomeDirectory)/.ssh  # Add this line to list files in the .ssh directory
+          echo "Contents of id_rsa:"
+          cat $(Agent.HomeDirectory)/.ssh/id_rsa
           if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa.pub" ]; then
             echo "Public key file exists."
           else
