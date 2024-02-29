@@ -116,11 +116,8 @@ variable "vm_password" {
   default = "Roshni@123eic"
 }
 
-variable "ssh_public_key_path" {
-  description = "Path to the SSH public key file"
-}
-
 variable "ssh_public_key" {
-  description = "SSH public key content"
-  default     = file(var.ssh_public_key_path)
+  description = "Path to the SSH public key file"
+  default     = "~/.ssh/id_rsa.pub"
+  
 }
