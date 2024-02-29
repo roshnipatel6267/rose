@@ -9,7 +9,7 @@ variables:
   value: 'file'  # Replace with the actual name of your Secure File
 
 - name: ssh_public_key_path
-  value: '/home/vsts/work/1/s/id_rsa.pub'  # Replace with the actual path to your SSH public key
+  value: "$(Agent.HomeDirectory)/.ssh/id_rsa.pub"
 
 pool:
   vmImage: 'ubuntu-latest'
