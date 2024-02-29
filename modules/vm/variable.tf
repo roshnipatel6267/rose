@@ -60,8 +60,11 @@ variable "vm_password" {
   default = "Roshni@123eic"
 }
 
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key file"
+}
+
 variable "ssh_public_key" {
-  description = "ssh_public _key value"
-  default     = "~/.ssh/id_rsa.pub"
-  
+  description = "SSH public key content"
+  default     = file(var.ssh_public_key_path)
 }
