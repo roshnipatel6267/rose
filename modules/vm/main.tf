@@ -48,8 +48,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   os_profile {
-    computer_name  = var.vm_name
-    admin_username = var.vm_username
 
     custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
 
@@ -58,7 +56,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
       ssh_keys {
         key_data = file(var.ssh_public_key)
-        path     = "/home/${var.vm_username}/.ssh/authorized_keys"
+        path     = "/home/${var.vm_username}/.ssh/id_rsa.pub"
       }
     }
   }
