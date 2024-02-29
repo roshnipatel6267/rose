@@ -12,7 +12,7 @@ variables:
   value: "$(Agent.HomeDirectory)/.ssh/id_rsa.pub"
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'roshni-test'
 
 jobs:
   - job: terraform_approval
@@ -27,7 +27,7 @@ jobs:
     displayName: "Manual Approval"
     dependsOn: terraform_approval
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'roshni-test'
     variables:
       ssh_key_secure_file: 'file'
     steps:
