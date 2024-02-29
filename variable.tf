@@ -118,6 +118,5 @@ variable "vm_password" {
 
 variable "ssh_public_key" {
   description = "Path to the SSH public key file"
-  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDUEFlZWXqadOH2PXHp3umZOwV/OHzxdeGoumrJybRh4zlM9iZUxydC6Sc0GLNlOUKeksrrlOwuAOO9hy6itT2LjmI3Lrcy7TsDMaYI80PIzIzonAEaPYbmWFLpgigjlj1UVFsdkg85lRuNfpaznKgHbljFFEXp+X4A7zEqxJbmN3MXH0p8i4/6CSMnQZm486sI0jfmDmd4PYrkFYkdGaZzV2hXrI1/vYZd85GhWWS5m3TFQ4lHMLgZklRMD96qU+KOnN/Rw08xMNzUDNU1+oWGwfPr/HIZ/RSIBJgwbyFgZpzApLn+kOIpt8arNfTDv6h1py0QB0Osx5mPbiZtlbpr roshnipatel@1LC73Z2-Latitude-5400"
-  
+  default     = "null"
 }
