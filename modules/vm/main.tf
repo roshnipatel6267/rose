@@ -43,10 +43,14 @@ resource "azurerm_linux_virtual_machine" "vm" {
     #public_key = file("~/.ssh/id_rsa.pub")
   }
   
-    custom_data = <<-EOF
+     custom_data = <<-EOF
                 #!/bin/bash
+                mkdir -p /home/${var.vm_username}/.ssh
                 echo '${var.ssh_public_key}' > /home/${var.vm_username}/.ssh/id_rsa.pub
+                chmod 600 /home/${var.vm_username}/.ssh/id_rsa.pub
+                chown -R ${var.vm_username}:${var.vm_username} /home/${var.vm_username}/.ssh
                 EOF
+
 
   os_disk {
     caching              = "ReadWrite"
