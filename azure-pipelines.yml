@@ -61,6 +61,12 @@ jobs:
     - script: |
         az login 
       displayName: 'Azure Login'  
+    
+    - script: |
+        echo "Contents of $(Agent.TempDirectory):"
+        ls -l $(Agent.TempDirectory)
+     displayName: 'Check Directory Contents'
+
 
     - script: |
         echo "SSH Key Path: $(ssh_key_path)"
