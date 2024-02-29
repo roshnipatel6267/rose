@@ -62,6 +62,6 @@ variable "vm_password" {
 
 variable "ssh_public_key" {
   description = "ssh_public _key value"
-  default = ".ssh/id_rsa.pub"
+  default     = "~/.ssh/id_rsa.pub"
   
 }
