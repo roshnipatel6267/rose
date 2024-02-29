@@ -10,6 +10,7 @@ variables:
 
 - name: ssh_public_key_path
   value: "$(Agent.HomeDirectory)/.ssh/id_rsa.pub"
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -43,10 +44,9 @@ jobs:
           retryCount: 3
 
       - script: |
-          mkdir -p $(Agent.HomeDirectory)/.ssh/id_rsa.pub
-          ls -la $(Agent.TempDirectory)/$(ssh_key_secure_file)
-          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa.pub
-          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa.pub
+          mkdir -p $(Agent.HomeDirectory)/.ssh
+          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
+          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
         displayName: 'Configure SSH Key'
 
       - script: |
@@ -125,3 +125,12 @@ jobs:
             exit 1
           fi
         displayName: 'Apply Terraform Changes'
+
+      - task: CopyFilesOverSSH@0
+        displayName: 'Copy files to the remote machine'
+        inputs:
+            sshEndpoint: 'your-ssh-service-connection'  # Specify the SSH service connection endpoint
+            sourceFolder: '$(Build.SourcesDirectory)/files'  # Update the source folder path as per your needs
+            targetFolder: '/home/azureuser/rose'  # Update the target folder path on the remote machine
+            cleanTargetFolder: true
+            failOnEmptySource: true
