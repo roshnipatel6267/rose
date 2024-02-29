@@ -66,22 +66,7 @@ jobs:
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          terraform plan \
-          -var "nsg_name=$(nsg_name)" \
-          -var "location=$(location)" \
-          -var "resource_group_name=$(resource_group_name)" \
-          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
-          -var "vnet_name=$(vnet_name)" \
-          -var "vnet_address_space=[\"10.0.0.0/16\"]" \
-          -var "subnet_name=$(subnet_name)" \
-          -var "subnet_address_prefix=[\"10.0.0.0/24\"]" \
-          -var "vm_name=$(vm_name)" \
-          -var "vm_size=$(vm_size)" \
-          -var "vm_username=$(vm_username)" \
-          -var "storage_account_name=$(storage_account_name)" \
-          -var "container_name=$(container_name)" \
-          -var "location_name=$(location_name)" \
-          -var "ssh_public_key_path=$(ssh_public_key_path)"
+          terraform plan -out=tfplan
         displayName: 'Terraform Plan'
 
   - job: manual_intervention
@@ -104,26 +89,7 @@ jobs:
           cd $(Build.SourcesDirectory)/rose
           terraform init
           az login 
-          terraform apply -auto-approve \
-          -var "nsg_name=$(nsg_name)" \
-          -var "location=$(location)" \
-          -var "resource_group_name=$(resource_group_name)" \
-          -var "nsg_rules=[{\"name\":\"SSH\",\"priority\":100,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"22\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"},{\"name\":\"HTTP\",\"priority\":101,\"access\":\"Allow\",\"protocol\":\"TCP\",\"source_port_range\":\"*\",\"destination_port_range\":\"80\",\"source_address_prefix\":\"*\",\"destination_address_prefix\":\"*\"}]" \
-          -var "vnet_name=$(vnet_name)" \
-          -var "vnet_address_space=[\"10.0.0.0/16\"]" \
-          -var "subnet_name=$(subnet_name)" \
-          -var "subnet_address_prefix=[\"10.0.0.0/24\"]" \
-          -var "vm_name=$(vm_name)" \
-          -var "vm_size=$(vm_size)" \
-          -var "vm_username=$(vm_username)" \
-          -var "storage_account_name=$(storage_account_name)" \
-          -var "container_name=$(container_name)" \
-          -var "location_name=$(location_name)" \
-          -var "ssh_public_key_path=$(ssh_public_key_path)"
-          if [ $? -ne 0 ]; then
-            echo "Error: Terraform apply failed. Please check the apply output for details."
-            exit 1
-          fi
+          terraform apply -auto-approve 
         displayName: 'Apply Terraform Changes'
 
       - task: CopyFilesOverSSH@0
