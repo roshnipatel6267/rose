@@ -9,7 +9,7 @@ variables:
   value: 'file'  # Replace with the actual name of your Secure File
 
 - name: ssh_public_key_path
-  value: "$(Agent.HomeDirectory)/.ssh/id_rsa.pub"
+  value: "$(Agent.TempDirectory)/$(ssh_key_secure_file)"
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -45,7 +45,7 @@ jobs:
 
       - script: |
           mkdir -p $(Agent.HomeDirectory)/.ssh
-          cp $(Agent.TempDirectory)/$(downloadSSHKey.secureFilePath) $(Agent.HomeDirectory)/.ssh/id_rsa
+          cp $(Agent.TempDirectory)/$(downloadSSHKey.secureFileName) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
         displayName: 'Configure SSH Key'
 
