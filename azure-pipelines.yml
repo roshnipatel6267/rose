@@ -1,9 +1,15 @@
-
 trigger:
 - dev
 
 pr:
 - dev
+
+variables:
+- name: ssh_key_secure_file
+  value: 'file'  # Replace with the actual name of your Secure File
+
+- name: ssh_public_key_path
+  value: '/home/vsts/work/1/s/id_rsa.pub'  # Replace with the actual path to your SSH public key
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -23,7 +29,7 @@ jobs:
     pool:
       vmImage: 'ubuntu-latest'
     variables:
-      ssh_key_secure_file: 'file' 
+      ssh_key_secure_file: 'file'
     steps:
       - script: 
           echo "Manual Approval Job"
@@ -38,12 +44,11 @@ jobs:
           retryCount: 3
 
       - script: |
-          mkdir -p $(Agent.HomeDirectory)/.ssh
+          mkdir -p $(Agent.HomeDirectory)/.ssh/id_rsa.pub
           ls -la $(Agent.TempDirectory)/$(ssh_key_secure_file)
-          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
-          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
+          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa.pub
+          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa.pub
         displayName: 'Configure SSH Key'
-
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
