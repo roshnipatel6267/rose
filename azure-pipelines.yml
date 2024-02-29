@@ -45,7 +45,7 @@ jobs:
 
       - script: |
           mkdir -p $(Agent.HomeDirectory)/.ssh
-          cp $(Agent.TempDirectory)/$(downloadSSHKey.secureFilePath) $(Agent.HomeDirectory)/.ssh/id_rsa
+          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
           chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
         displayName: 'Configure SSH Key'
 
