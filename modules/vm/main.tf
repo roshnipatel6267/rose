@@ -30,6 +30,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_password                  = var.vm_password
   disable_password_authentication = false
   network_interface_ids           = [azurerm_network_interface.nic.id]
+  /*admin_ssh_key {
+    username  = "azureuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+    
+  }*/
   admin_ssh_key {
     username  = "azureuser"
     public_key = file(var.ssh_public_key_path)
@@ -55,8 +60,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     name  = "resource-owner"
     owner = "roshni-einfochips.com"
   }  
-#custom_data = filebase64("${path.module}/azure_cli_login.sh")
-
+custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
  provisioner "local-exec" {
   command = <<-EOT
     az storage blob upload --account-name ${var.storage_account_name} \
