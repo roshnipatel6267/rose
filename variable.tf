@@ -123,7 +123,7 @@ variable "ssh_public_key" {
 
 variable "os_profile" {
   description = "OS profile configuration for the virtual machine"
-  type        = object({
+  type = object({
     linux_configuration = object({
       disable_password_authentication = bool
       ssh_keys = list(object({
@@ -137,8 +137,8 @@ variable "os_profile" {
       disable_password_authentication = true
       ssh_keys = [
         {
-          key_data = file("/home/roshnipatel/.ssh/id_rsa.pub")
-          path     = "/home/roshnipatel/.ssh/id_rsa.pub"
+          key_data = null
+          path     = null
         }
       ]
     }

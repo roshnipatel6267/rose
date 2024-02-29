@@ -73,7 +73,7 @@ variable "ssh_keys" {
 
 variable "os_profile" {
   description = "OS profile configuration for the virtual machine"
-  type        = object({
+  type = object({
     linux_configuration = object({
       disable_password_authentication = bool
       ssh_keys = list(object({
@@ -82,6 +82,15 @@ variable "os_profile" {
       }))
     })
   })
-  default = null
+  default = {
+    linux_configuration = {
+      disable_password_authentication = true
+      ssh_keys = [
+        {
+          key_data = null
+          path     = null
+        }
+      ]
+    }
+  }
 }
-

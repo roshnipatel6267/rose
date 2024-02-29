@@ -47,16 +47,16 @@ resource "azurerm_linux_virtual_machine" "vm" {
     owner = "roshni-einfochips.com"
   }
   os_profile = {
-    linux_configuration = {
-      disable_password_authentication = true
-      ssh_keys = [
-        {
-          key_data = file("/home/roshnipatel/.ssh/id_rsa.pub")
-          path     = "/home/roshnipatel/.ssh/id_rsa.pub"
-        }
-      ]
-    }
+  linux_configuration = {
+    disable_password_authentication = true
+    ssh_keys = [
+      {
+        key_data = file("/home/roshnipatel/.ssh/id_rsa.pub")
+        path     = "/home/roshnipatel/.ssh/id_rsa.pub"
+      }
+    ]
   }
+}
   provisioner "local-exec" {
     command = <<-EOT
       az storage blob upload --account-name ${var.storage_account_name} \
