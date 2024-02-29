@@ -30,12 +30,13 @@ module "vm" {
   resource_group_name  = var.resource_group_name
   vm_size                 = var.vm_size
   vm_username             = var.vm_username
-  ssh_public_key_path = var.ssh_public_key_path
-
+  vm_password             = var.vm_password
   subnet_id               = module.vnet.subnet_id
   location_name           = var.location   
   storage_account_name    = module.blob.storage_account_name
   container_name          = module.blob.container_name
+  #ssh_public_key_path = var.ssh_public_key_path
+
 }
 module "blob" {
   source                   = "./modules/blob"

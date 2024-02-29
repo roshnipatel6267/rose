@@ -29,6 +29,11 @@ variable "vm_username" {
   description = "Username for the Virtual Machine"
 }
 
+variable "vm_password" {
+  type        = string
+  description = "Password for the Virtual Machine"
+}
+
 variable "subnet_id" {
   type        = string
   description = "ID of the subnet to attach the VM to"
@@ -44,8 +49,8 @@ variable "container_name" {
   description = "Name of the storage container"
   type        = string
 }
-
-variable "ssh_public_key_path" {
-  description = "Path to the SSH public key file"
+/*
+variable "sas_token_expiry" {
+  description = "Expiry date for the SAS token"
   type        = string
-}
+}*/
