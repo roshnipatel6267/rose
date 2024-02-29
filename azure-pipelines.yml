@@ -51,7 +51,6 @@ jobs:
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          pwd
           terraform init
         displayName: 'Terraform Init'
 
