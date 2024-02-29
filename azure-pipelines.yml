@@ -41,18 +41,17 @@ jobs:
           retryCount: 3
 
       - script: |
-         mkdir -p $(Agent.HomeDirectory)/.ssh
-         cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
-         chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
-         ls -l $(Agent.HomeDirectory)/.ssh  # Add this line to list files in the .ssh directory
-         if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa.pub" ]; then
-         echo "Public key file exists."
-         else
-         echo "Public key file does not exist."
-         exit 1
-         fi
-       displayName: 'Configure SSH Key'
-
+          mkdir -p $(Agent.HomeDirectory)/.ssh
+          cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
+          chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
+          ls -l $(Agent.HomeDirectory)/.ssh  # Add this line to list files in the .ssh directory
+          if [ -f "$(Agent.HomeDirectory)/.ssh/id_rsa.pub" ]; then
+            echo "Public key file exists."
+          else
+            echo "Public key file does not exist."
+            exit 1
+          fi
+        displayName: 'Configure SSH Key'
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
