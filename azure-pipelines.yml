@@ -39,11 +39,13 @@ jobs:
         retryCount: 3
 
     - script: |
-        mkdir -p $(Agent.HomeDirectory)/.ssh
-        cp $(Agent.TempDirectory)/$(ssh_key_secure_file) $(Agent.HomeDirectory)/.ssh/id_rsa
-        chmod 600 $(Agent.HomeDirectory)/.ssh/id_rsa
+        echo "Agent.HomeDirectory: $(Agent.HomeDirectory)"
+        echo "SSH Key Path: $(Agent.HomeDirectory)/.ssh/id_rsa"
+        ls -l $(Agent.HomeDirectory)/.ssh
+        cat $(Agent.HomeDirectory)/.ssh/id_rsa
         ssh-keygen -y -f $(Agent.HomeDirectory)/.ssh/id_rsa > $(ssh_key_path)
-      displayName: 'Configure SSH Key'
+     displayName: 'Configure SSH Key'
+
 
     - script: |
         cd $(Build.SourcesDirectory)/rose
