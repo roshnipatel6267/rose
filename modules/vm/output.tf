@@ -7,5 +7,5 @@ output "storage_access_key" {
 }*/
 
 output "ssh_public_key" {
-  value = data.azurerm_ssh_public_key.public_key.openssh_key
+  value = data.azurerm_ssh_public_key.public_key
 }
