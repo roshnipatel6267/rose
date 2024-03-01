@@ -15,7 +15,8 @@ steps:
 
   # Add more steps as needed:
   - script: |
-      cd "$(Agent.TempDirectory)/_work/_temp/$(downloadSSHKey.secureFileFileName)"
+      echo "Secure file alias: $(downloadSSHKey.secureFile)"
+      cd "$(Agent.TempDirectory)/_work/_temp/$(downloadSSHKey.secureFile)"
       # Now, you can use the secure file as needed
     displayName: 'Run Script'
 
