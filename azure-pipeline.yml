@@ -1,71 +1,76 @@
 trigger:
-  branches:
-    include:
-      - test
+- test
+
+pr:
+- test
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  SSH_PUBLIC_KEY: $(SSH_PUBLIC_KEY)
-
 jobs:
-- job: download_and_copy
-  steps:
-    - task: DownloadSecureFile@1
-      name: download
-      displayName: 'Download Secure File'
-      inputs:
-        secureFile: 'File'
+  - job: terraform_approval
+    displayName: "Terraform Approval"
+    steps:
+      - script: 
+          echo "Terraform Approval Job"
+        displayName: 'Terraform Approval'
+        condition: succeededOrFailed()
 
-    - script: |
-        cat $(download.secureFilePath)
-      displayName: 'Copy file to workspace directory'
+  - job: manual_approval
+    displayName: "Manual Approval"
+    dependsOn: terraform_approval
+    pool:
+      vmImage: 'ubuntu-latest' 
+    steps:
+      - script: 
+          echo "Manual Approval Job"
+        displayName: 'Manual Approval'
+        condition: succeededOrFailed()
 
-- job: terraform_approval
-  displayName: "Terraform Approval"
-  steps:
-    - script: 
-        echo "Terraform Approval Job"
-      displayName: 'Terraform Approval'
-      condition: succeededOrFailed()
+      - script: |
+          ls -la
+          pwd
+          cd $(Build.SourcesDirectory)/rose
+          pwd
+          terraform init
+        displayName: 'Terraform Init'
 
-    - script: |
-        echo "SSH_PUBLIC_KEY: $(SSH_PUBLIC_KEY)"
-        ls -la
-        pwd
-        cd $(Build.SourcesDirectory)
-        pwd
-        cd rose
-        echo "ssh_public_key = \"$(SSH_PUBLIC_KEY)\"" > terraform.auto.tfvars
-        cat terraform.auto.tfvars
-        terraform init
-        terraform validate
-        az login 
-        terraform plan -var-file=terraform.auto.tfvars
-      displayName: 'Terraform Plan'
+      - script: |
+          cd $(Build.SourcesDirectory)/rose
+          terraform validate
+        displayName: 'Terraform Validate'
 
-- job: manual_intervention
-  displayName: 'Manual Approval Intervention'
-  dependsOn: terraform_approval
-  pool: server
-  steps:
-    - task: ManualValidation@0
-      timeoutInMinutes: 5
-      inputs:
-        instructions: 'Please review and manually approve the Terraform changes.'
+      - script: |
+          az login 
+        displayName: 'Azure Login'  
 
-- job: apply_changes
-  displayName: 'Apply Terraform Changes'
-  dependsOn: manual_intervention
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-    - script: |
-        cd $(Build.SourcesDirectory)/rose
-        echo 'ssh_public_key = "$(SSH_PUBLIC_KEY)"' > terraform.auto.tfvars
-        cat terraform.auto.tfvars
-        terraform init
-        az login 
-        terraform apply -auto-approve -var-file=terraform.auto.tfvars
-      displayName: 'Apply Terraform Changes'
+      - script: |
+          cd $(Build.SourcesDirectory)/rose
+          terraform plan \
+          -var "vm_password=$(vm_password)" \
+        displayName: 'Terraform Plan'
+
+  - job: manual_intervention
+    displayName: 'Manual Approval Intervention'
+    dependsOn: manual_approval
+    pool: server
+    steps:
+      - task: ManualValidation@0
+        timeoutInMinutes: 5
+        inputs:
+          instructions: 'Please review and manually approve the Terraform changes.'
+
+  - job: apply_changes
+    displayName: 'Apply Terraform Changes'
+    dependsOn: manual_intervention
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - script: |
+          cd $(Build.SourcesDirectory)/rose
+          terraform init
+          az login 
+          terraform apply -auto-approve \
+          -var "vm_password=$(vm_password)" \
+
+        displayName: 'Apply Terraform Changes'
