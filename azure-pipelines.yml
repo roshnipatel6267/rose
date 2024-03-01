@@ -6,7 +6,7 @@ pr:
 
 variables:
 - name: ssh_key_secure_file
-  value: 'file'  # Replace with the actual name of your Secure File
+  value: 'YourSecureFileName'  # Replace with the actual name of your Secure File
 - name: ssh_key_path
   value: '$(Agent.TempDirectory)/id_rsa.pub'  # Adjust the path accordingly
 
@@ -28,7 +28,7 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   variables:
-    ssh_key_secure_file: 'file'
+    ssh_key_secure_file: 'YourSecureFileName'
     ssh_key_path: '$(Agent.TempDirectory)/id_rsa.pub'
   steps:
     - task: DownloadSecureFile@1
