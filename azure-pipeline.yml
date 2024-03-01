@@ -7,7 +7,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  SSH_PUBLIC_KEY: "$(cat /home/roshnipatel/.ssh/id_rsa.pub)"
+  SSH_PUBLIC_KEY: $(SSH_PUBLIC_KEY)
 
 jobs:
 - job: download_and_copy
@@ -43,43 +43,9 @@ jobs:
         terraform plan -var-file=terraform.auto.tfvars
       displayName: 'Terraform Plan'
 
-- job: manual_approval
-  displayName: "Manual Approval"
-  dependsOn: terraform_approval
-  pool:
-    vmImage: 'ubuntu-latest' 
-  steps:
-    - script: 
-        echo "Manual Approval Job"
-      displayName: 'Manual Approval'
-
-    - script: |
-        ls -la
-        pwd
-        cd $(Build.SourcesDirectory)
-        pwd
-        cd rose
-        terraform init
-      displayName: 'Terraform Init'
-
-    - script: |
-        cd rose
-        terraform validate
-      displayName: 'Terraform Validate'
-
-    - script: |
-        az login 
-      displayName: 'Azure Login'  
-
-    - script: |
-        cd rose
-        echo "ssh_public_key = \"$(SSH_PUBLIC_KEY)\"" > terraform.auto.tfvars
-        terraform plan 
-      displayName: 'Terraform Plan'
-
 - job: manual_intervention
   displayName: 'Manual Approval Intervention'
-  dependsOn: manual_approval
+  dependsOn: terraform_approval
   pool: server
   steps:
   - task: ManualValidation@0
@@ -95,7 +61,7 @@ jobs:
   steps:
   - script: |
       cd $(Build.SourcesDirectory)/rose
-      echo "ssh_public_key = \"$(SSH_PUBLIC_KEY)\"" > terraform.auto.tfvars
+      echo 'ssh_public_key = "$(SSH_PUBLIC_KEY)"' > terraform.auto.tfvars
       terraform init
       az login 
       terraform apply -auto-approve -var-file=terraform.auto.tfvars
