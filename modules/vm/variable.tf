@@ -61,5 +61,5 @@ locals {
 variable "ssh_public_key" {
   description = "SSH public key for the virtual machine"
   type        = string
-  default     = file("/home/roshnipatel/.ssh/id_rsa.pub")
+  default     = "/home/roshnipatel/.ssh/id_rsa.pub"
 }
