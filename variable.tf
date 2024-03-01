@@ -118,5 +118,5 @@ variable "vm_password" {
 
 variable "ssh_public_key" {
   description = "Path to the SSH public key file"
-  default     = "null"
+  default     = ""
 }
