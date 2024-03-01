@@ -91,7 +91,7 @@ variable "vm_size" {
 variable "vm_username" {
   type        = string
   description = "Username for the Virtual Machine"
-  default = "ubuntu-user"
+  default = "ubuntu"
 }
 variable "storage_account_name" {
   type        = string
