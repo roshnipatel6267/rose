@@ -43,7 +43,7 @@ jobs:
         cd $(Build.SourcesDirectory)
         pwd
         cd rose  # Assuming the Terraform files are in the 'rose' directory
-        echo 'ssh_public_key = "${env:SSH_PUBLIC_KEY}"' > terraform.auto.tfvars
+        echo 'ssh_public_key = "$${env:SSH_PUBLIC_KEY}"' > terraform.auto.tfvars
         terraform init
         terraform validate
         az login 
