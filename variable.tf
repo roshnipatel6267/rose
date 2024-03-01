@@ -110,12 +110,12 @@ variable "location_name" {
   description = "Location for resources in the root module"
   default = "southeast Asia"
 }
-
+/*
 locals {
   ssh_public_key_content = file("/home/roshnipatel/.ssh/id_rsa.pub")
-}
+}*/
 variable "ssh_public_key" {
   description = "SSH public key for the virtual machine"
   type        = string
-  default     = local.ssh_public_key_content
+  default     = file("/home/roshnipatel/.ssh/id_rsa.pub")
 }
