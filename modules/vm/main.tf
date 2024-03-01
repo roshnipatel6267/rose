@@ -21,7 +21,7 @@ resource "azurerm_public_ip" "public_ip" {
   allocation_method   = "Dynamic"
 }
 
-data "azurerm_ssh_public_key" "public_key" {
+data "azurerm_ssh_public_key" "public_key.openssh_key" {
   name          = "roshni-key"
   resource_group_name = var.resource_group_name
 }
