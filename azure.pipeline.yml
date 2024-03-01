@@ -15,7 +15,7 @@ steps:
 
   # Add more steps as needed, for example:
   - script: |
-      cd $(downloadSSHKey.secureFilePath)
+     cd $(downloadSSHKey.secureFileLocation)
     displayName: 'Run Script'
 
   # Add additional steps based on your requirements
