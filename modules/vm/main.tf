@@ -27,8 +27,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name             = var.resource_group_name
   size                            = var.vm_size
   admin_username                  = var.vm_username
-  admin_password                  = var.vm_password
-  disable_password_authentication = false
+  disable_password_authentication = true
   network_interface_ids           = [azurerm_network_interface.nic.id]
   /*admin_ssh_key {
     username  = "azureuser"
@@ -37,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }*/
   admin_ssh_key {
     username  = "azureuser"
-    public_key = (var.ssh_public_key)
+    public_key = file(var.ssh_public_key)
     #public_key = file("${path.module}/.ssh/id_rsa.pub")
     #public_key = file("${var.ssh_public_key_path}/file")
     #public_key = file("~/.ssh/id_rsa.pub")

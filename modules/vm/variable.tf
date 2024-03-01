@@ -54,12 +54,6 @@ variable "container_name" {
   default = "container-roshni"
 }
 
-variable "vm_password" {
-  type        = string
-  description = "Password for the Virtual Machine"
-  default = "Roshni@123eic"
-}
-
 variable "ssh_public_key" {
   description = "ssh_public _key value"
   default     = ""

@@ -110,11 +110,7 @@ variable "location_name" {
   description = "Location for resources in the root module"
   default = "southeast Asia"
 }
-variable "vm_password" {
-  type        = string
-  description = "Password for the Virtual Machine"
-  default = "Roshni@123eic"
-}
+
 
 variable "ssh_public_key" {
   description = "Path to the SSH public key file"
