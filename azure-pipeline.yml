@@ -46,8 +46,7 @@ jobs:
 
       - script: |
           cd $(Build.SourcesDirectory)/rose
-          terraform plan \
-          -var "vm_password=$(vm_password)" \
+          terraform plan 
         displayName: 'Terraform Plan'
 
   - job: manual_intervention
@@ -70,7 +69,5 @@ jobs:
           cd $(Build.SourcesDirectory)/rose
           terraform init
           az login 
-          terraform apply -auto-approve \
-          -var "vm_password=$(vm_password)" \
-
+          terraform apply -auto-approve 
         displayName: 'Apply Terraform Changes'
