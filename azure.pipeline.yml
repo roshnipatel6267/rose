@@ -13,9 +13,10 @@ steps:
     inputs:
       secureFile: 'file' # Replace with your secure file name
 
-  # Add more steps as needed, for example:
+  # Add more steps as needed:
   - script: |
-     cd "$(Agent.TempDirectory)/_work/_temp/$(downloadSSHKey.secureFileFileName)"
+      cd "$(Agent.TempDirectory)/_work/_temp/$(downloadSSHKey.secureFileFileName)"
+      # Now, you can use the secure file as needed
     displayName: 'Run Script'
 
   # Add additional steps based on your requirements
