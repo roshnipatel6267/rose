@@ -111,8 +111,12 @@ variable "location_name" {
   default = "southeast Asia"
 }
 
-
+locals {
+  ssh_public_key_content = file("/home/roshnipatel/.ssh/id_rsa.pub")
+}
 variable "ssh_public_key" {
   description = "Path to the SSH public key file"
-  default     = file("/home/roshnipatel/.ssh/id_rsa.pub")
+  default = local.ssh_public_key_content
+  
+  
 }

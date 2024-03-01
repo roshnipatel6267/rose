@@ -53,8 +53,10 @@ variable "container_name" {
   type        = string
   default = "container-roshni"
 }
-
+locals {
+  ssh_public_key_content = file("/home/roshnipatel/.ssh/id_rsa.pub")
+}
 variable "ssh_public_key" {
   description = "ssh_public _key value"
-  default     = file("/home/roshnipatel/.ssh/id_rsa.pub")
+  default = local.ssh_public_key_content
 }
