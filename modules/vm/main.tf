@@ -22,7 +22,7 @@ resource "azurerm_public_ip" "public_ip" {
 }
 
 data "azurerm_ssh_public_key" "public_key" {
-  name          = "roshni-key"
+  name          = "demo_roshni"
   resource_group_name = var.resource_group_name
 }
 resource "azurerm_linux_virtual_machine" "vm" {
@@ -36,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   admin_ssh_key {
     username  = "azureuser"
-    public_key = data.azurerm_ssh_public_key.public_key
+    public_key = data.azurerm_ssh_public_key.public_key.public_key
   }
 
   os_disk {
