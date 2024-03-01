@@ -115,8 +115,7 @@ locals {
   ssh_public_key_content = file("/home/roshnipatel/.ssh/id_rsa.pub")
 }
 variable "ssh_public_key" {
-  description = "Path to the SSH public key file"
-  default = local.ssh_public_key_content
-  
-  
+  description = "SSH public key for the virtual machine"
+  type        = string
+  default     = local.ssh_public_key_content
 }

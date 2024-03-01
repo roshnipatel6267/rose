@@ -56,7 +56,9 @@ variable "container_name" {
 locals {
   ssh_public_key_content = file("/home/roshnipatel/.ssh/id_rsa.pub")
 }
+
 variable "ssh_public_key" {
-  description = "ssh_public _key value"
-  default = local.ssh_public_key_content
+  description = "SSH public key for the virtual machine"
+  type        = string
+  default     = local.ssh_public_key_content
 }
