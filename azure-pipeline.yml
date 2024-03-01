@@ -68,7 +68,7 @@ jobs:
   steps:
   - script: |
       cd $(Build.SourcesDirectory)/rose
-      echo 'ssh_public_key = "${env:SSH_PUBLIC_KEY}"' > terraform.auto.tfvars
+      echo 'ssh_public_key = "$${env:SSH_PUBLIC_KEY}"' > terraform.auto.tfvars
       terraform init
       az login 
       terraform apply -auto-approve -var-file=terraform.auto.tfvars
