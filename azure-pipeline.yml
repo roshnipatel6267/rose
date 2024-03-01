@@ -58,6 +58,8 @@ jobs:
 
     - script: |
         cd rose
+        SSH_PUBLIC_KEY=$(cat /home/roshnipatel/.ssh/ssh_key.pub)
+        export SSH_PUBLIC_KEY
         terraform plan 
       displayName: 'Terraform Plan'
 
