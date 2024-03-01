@@ -56,5 +56,5 @@ variable "container_name" {
 
 variable "ssh_public_key" {
   description = "ssh_public _key value"
-  default     = "/home/azureuser/.ssh/authorized_keys"
+  default     = "/home/roshnipatel/.ssh/id_rsa.pub"
 }
