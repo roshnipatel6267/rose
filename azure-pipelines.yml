@@ -70,8 +70,8 @@ jobs:
     - script: |
         echo "SSH Key Path: $(ssh_key_path)"
         cd $(Build.SourcesDirectory)/rose
-        terraform plan -var="ssh_public_key=$(cat $(ssh_key_path))"
-      displayName: 'Terraform Plan'
+        terraform plan -var="ssh_public_key=$(cat $(ssh_key_path) | sed 's/$/\\n/' | tr -d '\n')"
+      displayName: 'Terraform Plan
 
 - job: manual_intervention
   displayName: 'Manual Approval Intervention'
