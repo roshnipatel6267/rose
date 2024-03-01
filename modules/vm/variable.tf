@@ -56,5 +56,5 @@ variable "container_name" {
 
 variable "ssh_public_key" {
   description = "ssh_public _key value"
-  default     = "/home/roshnipatel/.ssh/id_rsa.pub"
+  default     = file("/home/roshnipatel/.ssh/id_rsa.pub")
 }
