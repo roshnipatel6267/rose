@@ -32,7 +32,7 @@ variable "vm_size" {
 variable "vm_username" {
   type        = string
   description = "Username for the Virtual Machine"
-  default = "ubuntu"
+  default = "azureuser"
 }
 
 variable "subnet_id" {
