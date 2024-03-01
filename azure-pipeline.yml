@@ -79,5 +79,5 @@ jobs:
       cd $(Build.SourcesDirectory)/rose
       terraform init
       az login 
-      terraform apply -auto-approve 
+      terraform apply -auto-approve
     displayName: 'Apply Terraform Changes'
