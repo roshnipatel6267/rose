@@ -1,0 +1,17 @@
+trigger:
+  branches:
+    include:
+      - test
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: DownloadSecureFile@1
+    name: download
+    inputs:
+      secureFile: 'File'
+
+  - script: |
+      cat $(download.secureFilePath)
+    displayName: 'Copy file to workspace directory'
