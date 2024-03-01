@@ -114,5 +114,5 @@ variable "location_name" {
 
 variable "ssh_public_key" {
   description = "Path to the SSH public key file"
-  default     = "/home/roshnipatel/.ssh/id_rsa.pub"
+  default     = "/home/vsts/agents/3.234.0/.ssh/id_rsa"
 }
