@@ -11,7 +11,8 @@ resource "azurerm_network_interface" "nic" {
     public_ip_address_id          = azurerm_public_ip.public_ip.id
   }
 }
-  
+
+
 # Define the public IP address
 resource "azurerm_public_ip" "public_ip" {
   name                = "${var.vm_name}-ip"
@@ -20,7 +21,6 @@ resource "azurerm_public_ip" "public_ip" {
   allocation_method   = "Dynamic"
 }
 
-# Create a virtual machine
 resource "azurerm_linux_virtual_machine" "vm" {
   name                            = var.vm_name
   location                        = var.location_name
@@ -29,36 +29,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username                  = var.vm_username
   disable_password_authentication = true
   network_interface_ids           = [azurerm_network_interface.nic.id]
-  /*admin_ssh_key {
-    username  = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
-    
-  }*/
+
   admin_ssh_key {
     username  = "azureuser"
-    #public_key = (var.ssh_public_key)
-    public_key = (var.ssh_public_key)
-    #public_key = file("${path.module}/.ssh/id_rsa.pub")
-    #public_key = file("${var.ssh_public_key_path}/file")
-    #public_key = file("~/.ssh/id_rsa.pub")
+    public_key = var.ssh_public_key
   }
-  
-     custom_data = base64encode(<<EOF
-                #!/bin/bash
-                mkdir -p /home/${var.vm_username}/.ssh
-                echo '${var.ssh_public_key}' > /home/${var.vm_username}/.ssh/id_rsa.pub
-                chmod 600 /home/${var.vm_username}/.ssh/id_rsa.pub
-                chown -R ${var.vm_username}:${var.vm_username} /home/${var.vm_username}/.ssh
-EOF
-)
-
-os_profile_linux_config {
-  disable_password_authentication = true
-  ssh_keys{
-    path = "/home/roshnipatel/.ssh/id_rsa.pub"
-    key_data = id_rsa.pub.ssh-key.public_key_openssh
-  }
-}
 
   os_disk {
     caching              = "ReadWrite"
@@ -66,26 +41,25 @@ os_profile_linux_config {
   }
 
   source_image_reference {
-  publisher = "Canonical"
-  offer     = "UbuntuServer"
-  sku       = "18.04-LTS"  
-  version   = "latest"
-}
-
+    publisher = "Canonical"
+    offer     = "UbuntuServer"
+    sku       = "18.04-LTS"  
+    version   = "latest"
+  }
 
   tags = {
     name  = "resource-owner"
     owner = "roshni-einfochips.com"
-  }  
-#custom_data = filebase64("${path.module}/app-scripts/app1-cloud-init.txt")
- provisioner "local-exec" {
-  command = <<-EOT
-    az storage blob upload --account-name ${var.storage_account_name} \
-                            --container-name ${var.container_name}  \
-                            --name file1.txt \
-                            --type block \
-                            --content-type "text/plain" \
-                            --file ./file1.txt
-  EOT
-}
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOT
+      az storage blob upload --account-name ${var.storage_account_name} \
+                              --container-name ${var.container_name}  \
+                              --name file1.txt \
+                              --type block \
+                              --content-type "text/plain" \
+                              --file ./file1.txt
+    EOT
+  }
 }
