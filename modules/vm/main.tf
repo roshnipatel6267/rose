@@ -21,6 +21,10 @@ resource "azurerm_public_ip" "public_ip" {
   allocation_method   = "Dynamic"
 }
 
+data "azurerm_ssh_public_key" "public_key" {
+  name          = "roshni-key"
+  resource_group_name = var.resource_group_name
+}
 resource "azurerm_linux_virtual_machine" "vm" {
   name                            = var.vm_name
   location                        = var.location_name
@@ -32,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   admin_ssh_key {
     username  = "azureuser"
-    public_key = var.ssh_public_key
+    public_key = data.azurerm_ssh_public_key.public_key
   }
 
   os_disk {
