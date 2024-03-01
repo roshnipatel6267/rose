@@ -43,24 +43,11 @@ jobs:
         cd $(Build.SourcesDirectory)
         pwd
         cd rose  # Assuming the Terraform files are in the 'rose' directory
-        pwd
+        echo 'ssh_public_key = "${env:SSH_PUBLIC_KEY}"' > terraform.auto.tfvars
         terraform init
-      displayName: 'Terraform Init'
-
-    - script: |
-        cd rose
         terraform validate
-      displayName: 'Terraform Validate'
-
-    - script: |
         az login 
-      displayName: 'Azure Login'  
-
-    - script: |
-        cd rose
-        SSH_PUBLIC_KEY=$(cat /home/roshnipatel/.ssh/ssh_key.pub)
-        export SSH_PUBLIC_KEY
-        terraform plan 
+        terraform plan -var-file=terraform.auto.tfvars
       displayName: 'Terraform Plan'
 
 - job: manual_intervention
@@ -81,7 +68,8 @@ jobs:
   steps:
   - script: |
       cd $(Build.SourcesDirectory)/rose
+      echo 'ssh_public_key = "${env:SSH_PUBLIC_KEY}"' > terraform.auto.tfvars
       terraform init
       az login 
-      terraform apply -auto-approve
+      terraform apply -auto-approve -var-file=terraform.auto.tfvars
     displayName: 'Apply Terraform Changes'
