@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "nic" {
     public_ip_address_id          = azurerm_public_ip.public_ip.id
   }
 }
-
+  
 # Define the public IP address
 resource "azurerm_public_ip" "public_ip" {
   name                = "${var.vm_name}-ip"
@@ -52,7 +52,13 @@ resource "azurerm_linux_virtual_machine" "vm" {
 EOF
 )
 
-
+os_profile_linux_config {
+  disable_password_authentication = true
+  ssh_keys{
+    path = "/home/roshnipatel/.ssh/id_rsa.pub"
+    key_data = id_rsa.pub.ssh-key.public_key_openssh
+  }
+}
 
   os_disk {
     caching              = "ReadWrite"
