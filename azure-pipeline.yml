@@ -6,11 +6,12 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-  # Add additional steps based on your requirements
- - task: DownloadSecureFile@1
-            name: download
-            inputs:
-              secureFile: 'File'
-          - script: |
-              cat $(download.secureFilePath) | 
-            displayName: 'Copy file to workspace directory'
+steps:
+  - task: DownloadSecureFile@1
+    name: download
+    inputs:
+      secureFile: 'File'
+
+  - script: |
+      cat $(download.secureFilePath)
+    displayName: 'Copy file to workspace directory'
