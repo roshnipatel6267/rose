@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+      - test
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: DownloadSecureFile@1
+    name: 'downloadSSHKey'
+    displayName: 'Download Secure File'
+    inputs:
+      secureFile: 'file' # Replace with your secure file name
+
+  # Add more steps as needed, for example:
+  - script: |
+      cd $(downloadSSHKey.secureFilePath)
+    displayName: 'Run Script'
+
+  # Add additional steps based on your requirements
